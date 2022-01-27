@@ -1,0 +1,102 @@
+import React, { useState } from 'react';
+import {
+  View,
+  ScrollView,
+  KeyboardAvoidingView,
+  Alert,
+  SafeAreaView,
+} from 'react-native';
+import Mytextinput from './components/Mytextinput';
+import Mybutton from './components/Mybutton';
+import { DatabaseConnection } from '../database/database-connection';
+
+const db = DatabaseConnection.getConnection();
+
+const RegisterNote = ({ navigation }) => {
+  let [noteTitle, setNoteTitle] = useState('');
+  let [noteDate, setNoteDate] = useState('');
+  let [noteContent, setNoteContent] = useState('');
+
+  let register_note = () => {
+    console.log(noteTitle, noteDate, noteContent);
+
+    if (!noteTitle) {
+      alert('Preencha o nome');
+      return;
+    }
+    if (!noteDate) {
+      alert('Preencha o contato');
+      return;
+    }
+    if (!noteContent) {
+      alert('Preencha o conteúdo');
+      return;
+    }
+
+    db.transaction(function (tx) {
+      tx.executeSql(
+        'INSERT INTO table_note (note_title, note_date, note_content) VALUES (?,?,?)',
+        [noteTitle, noteDate, noteContent],
+        (tx, results) => {
+          console.log('Results', results.rowsAffected);
+          if (results.rowsAffected > 0) {
+            Alert.alert(
+              'Sucesso',
+              'Cadastrado com sucesso!',
+              [
+                {
+                  text: 'Ok',
+                  onPress: () => navigation.navigate('Home'),
+                },
+              ],
+              { cancelable: false }
+            );
+          } else alert('Erro registrar!');
+        }
+      );
+    });
+  };
+
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={{ flex: 1, backgroundColor: 'white' }}>
+        <View style={{ flex: 1 }}>
+          <ScrollView keyboardShouldPersistTaps="handled">
+            <KeyboardAvoidingView
+              behavior="padding"
+              style={{ flex: 1, justifyContent: 'space-between' }}>
+              <Mytextinput
+                placeholder="Título"
+                onChangeText={
+                  (noteTitle) => setNoteTitle(noteTitle)
+                }
+                style={{ padding: 10 }}
+              />
+              <Mytextinput
+                placeholder="Data"
+                onChangeText={
+                  (noteDate) => setNoteDate(noteDate)
+                }
+                maxLength={10}
+                style={{ padding: 10 }}
+              />
+              <Mytextinput
+                placeholder="Descrição"
+                onChangeText={
+                  (noteContent) => setNoteContent(noteContent)
+                }
+                maxLength={225}
+                numberOfLines={5}
+                multiline={true}
+                style={{ textAlignVertical: 'top', padding: 10 }}
+              />
+              <Mybutton title="Salvar" customClick={register_note} />
+            </KeyboardAvoidingView>
+          </ScrollView>
+        </View>
+      </View>
+    </SafeAreaView>
+  );
+};
+
+export default RegisterNote;
