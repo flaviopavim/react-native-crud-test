@@ -40,17 +40,7 @@ const RegisterNote = ({ navigation }) => {
         (tx, results) => {
           console.log('Results', results.rowsAffected);
           if (results.rowsAffected > 0) {
-            Alert.alert(
-              'Sucesso',
-              'Cadastrado com sucesso!',
-              [
-                {
-                  text: 'Ok',
-                  onPress: () => navigation.navigate('Home'),
-                },
-              ],
-              { cancelable: false }
-            );
+            navigation.navigate('Home')
           } else alert('Erro registrar!');
         }
       );
@@ -60,7 +50,7 @@ const RegisterNote = ({ navigation }) => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ flex: 1, backgroundColor: 'white' }}>
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, paddingTop: 15 }}>
           <ScrollView keyboardShouldPersistTaps="handled">
             <KeyboardAvoidingView
               behavior="padding"

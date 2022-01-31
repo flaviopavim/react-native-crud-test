@@ -7,11 +7,11 @@ const Mytext = (props) => {
 
 const styles = StyleSheet.create({
   text: {
-    color: '#111825',
+    color: '#111',
     fontSize: 18,
     marginTop: 16,
-    marginLeft: 35,
-    marginRight: 35,
+    marginLeft: 20,
+    marginRight: 20,
   },
 });
 

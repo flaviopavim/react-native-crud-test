@@ -49,6 +49,7 @@ const HomeScreen = ({ navigation }) => {
   //}, []);
 
   async function deleteNote(id) {
+    console.log('Deleting:',id);
     Alert.alert(
       'Confirmação',
       'Tem certeza que deseja excluir?',
@@ -62,7 +63,7 @@ const HomeScreen = ({ navigation }) => {
           onPress: async () => {
             await db.transaction((tx) => {
               tx.executeSql(
-                'DELETE FROM note where id=?',
+                'DELETE FROM note WHERE id=?',
                 [id],
                 (tx, results) => {
                   console.log('Results', results.rowsAffected);
@@ -84,19 +85,14 @@ const HomeScreen = ({ navigation }) => {
         style={{ backgroundColor: '#EEE', marginTop: 20, padding: 30, borderRadius: 10 }}>
 
 
-        <Text style={styles.textheader}>Título</Text>
-        <Text style={styles.textbottom}>{item.title}</Text>
-
-        <Text style={styles.textheader}>Data</Text>
-        <Text style={styles.textbottom}>{item.start}</Text>
-
-        <Text style={styles.textheader}>Descrição</Text>
-        <Text style={styles.textbottom}>{item.content}</Text>
+        <Text style={styles.text}>{item.title}</Text>
+        <Text style={styles.text}>Data: {item.start}</Text>
+        <Text style={styles.text}>{item.content}</Text>
 
         <View
           style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-          <Mybutton title="Editar" customClick={() => navigation.navigate('Update',{id:item.note_id})} />
-          <Mybutton title="Excluir" customClick={() => deleteNote(item.note_id)} />
+          <Mybutton title="Editar" customClick={() => navigation.navigate('Update',{id:item.id})} />
+          <Mybutton title="Excluir" customClick={() => deleteNote(item.id)} />
         </View>
 
       </View>
@@ -127,15 +123,9 @@ const HomeScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  textheader: {
+  text: {
     color: '#111',
-    fontSize: 12,
-    fontWeight: '700',
-
-  },
-  textbottom: {
-    color: '#111',
-    fontSize: 18,
+    fontSize: 14,
   },
 });
 
