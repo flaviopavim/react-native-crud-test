@@ -14,17 +14,17 @@ const db = DatabaseConnection.getConnection();
 
 const RegisterNote = ({ navigation }) => {
   let [noteTitle, setNoteTitle] = useState('');
-  let [noteDate, setNoteDate] = useState('');
+  let [noteStart, setNoteStart] = useState('');
   let [noteContent, setNoteContent] = useState('');
 
   let register_note = () => {
-    console.log(noteTitle, noteDate, noteContent);
+    console.log(noteTitle, noteStart, noteContent);
 
     if (!noteTitle) {
       alert('Preencha o nome');
       return;
     }
-    if (!noteDate) {
+    if (!noteStart) {
       alert('Preencha o contato');
       return;
     }
@@ -35,8 +35,8 @@ const RegisterNote = ({ navigation }) => {
 
     db.transaction(function (tx) {
       tx.executeSql(
-        'INSERT INTO table_note (note_title, note_date, note_content) VALUES (?,?,?)',
-        [noteTitle, noteDate, noteContent],
+        'INSERT INTO note (title, `start`, content) VALUES (?,?,?)',
+        [noteTitle, noteStart, noteContent],
         (tx, results) => {
           console.log('Results', results.rowsAffected);
           if (results.rowsAffected > 0) {
@@ -75,7 +75,7 @@ const RegisterNote = ({ navigation }) => {
               <Mytextinput
                 placeholder="Data"
                 onChangeText={
-                  (noteDate) => setNoteDate(noteDate)
+                  (noteStart) => setNoteStart(noteStart)
                 }
                 maxLength={10}
                 style={{ padding: 10 }}

@@ -12,21 +12,21 @@ const HomeScreen = ({ navigation }) => {
   useEffect(() => {
     db.transaction(function (txn) {
       txn.executeSql(
-        "SELECT name FROM sqlite_master WHERE type='table' AND name='table_note'",
-        [],
+        "SELECT name FROM sqlite_master WHERE type='table' AND name='note'",[],
         function (tx, res) {
           console.log('item:', res.rows.length);
           if (res.rows.length == 0) {
-            txn.executeSql('DROP TABLE IF EXISTS table_note', []);
+            txn.executeSql('DROP TABLE IF EXISTS note', []);
             txn.executeSql(
-              'CREATE TABLE IF NOT EXISTS table_note ('+
-                'note_id INTEGER PRIMARY KEY AUTOINCREMENT, '+
-                'note_title VARCHAR(20), '+
-                'note_date VARCHAR(20), '+
-                'note_content VARCHAR(255) '+
-              ')',
-              []
-            );
+              'CREATE TABLE IF NOT EXISTS note ('+
+                'id INTEGER PRIMARY KEY AUTOINCREMENT, '+
+                'title VARCHAR(128), '+
+                'summary VARCHAR(1024), '+
+                '`start` VARCHAR(19), '+ //2020-12-31 23:59:59 - Data de início do evento
+                '`end` VARCHAR(19), '+ //2020-12-31 23:59:59 - Data de término do evento
+                'content VARCHAR(102400) '+
+              ')',[]);
+
           }
         }
       );
@@ -36,7 +36,7 @@ const HomeScreen = ({ navigation }) => {
   //useEffect(() => {
     db.transaction((tx) => {
       tx.executeSql(
-        'SELECT * FROM table_note ORDER BY note_id DESC',
+        'SELECT * FROM note ORDER BY id DESC',
         [],
         (tx, results) => {
           var temp = [];
@@ -62,7 +62,7 @@ const HomeScreen = ({ navigation }) => {
           onPress: async () => {
             await db.transaction((tx) => {
               tx.executeSql(
-                'DELETE FROM  table_note where note_id=?',
+                'DELETE FROM note where id=?',
                 [id],
                 (tx, results) => {
                   console.log('Results', results.rowsAffected);
@@ -85,13 +85,13 @@ const HomeScreen = ({ navigation }) => {
 
 
         <Text style={styles.textheader}>Título</Text>
-        <Text style={styles.textbottom}>{item.note_title}</Text>
+        <Text style={styles.textbottom}>{item.title}</Text>
 
-        <Text style={styles.textheader}>Contato</Text>
-        <Text style={styles.textbottom}>{item.note_date}</Text>
+        <Text style={styles.textheader}>Data</Text>
+        <Text style={styles.textbottom}>{item.start}</Text>
 
         <Text style={styles.textheader}>Descrição</Text>
-        <Text style={styles.textbottom}>{item.note_content}</Text>
+        <Text style={styles.textbottom}>{item.content}</Text>
 
         <View
           style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
@@ -115,7 +115,6 @@ const HomeScreen = ({ navigation }) => {
               } }
             />
           <FlatList
-            style={{ marginTop: 30 }}
             contentContainerStyle={{ paddingHorizontal: 20 }}
             data={flatListItems}
             keyExtractor={(item, index) => index.toString()}

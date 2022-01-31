@@ -17,7 +17,7 @@ const db = DatabaseConnection.getConnection();
 
 const UpdateNote = ({ route, navigation }) => {
   let [noteTitle, setNoteTitle] = useState('');
-  let [noteDate, setNoteDate] = useState('');
+  let [noteStart, setNoteStart] = useState('');
   let [noteContent, setNoteContent] = useState('');
 
 
@@ -25,7 +25,7 @@ const UpdateNote = ({ route, navigation }) => {
 
   let updateAllStates = (title, date, content) => {
     setNoteTitle(title);
-    setNoteDate(date);
+    setNoteStart(date);
     setNoteContent(content);
   };
 
@@ -33,7 +33,7 @@ const UpdateNote = ({ route, navigation }) => {
     console.log(id);
     db.transaction((tx) => {
       tx.executeSql(
-        'SELECT * FROM table_note where note_id = ?',
+        'SELECT * FROM note WHERE id = ?',
         [id],
         (tx, results) => {
           var len = results.rows.length;
@@ -56,13 +56,13 @@ const UpdateNote = ({ route, navigation }) => {
   searchNote();
 
   let updateNote = () => {
-    console.log(id, noteTitle, noteDate, noteContent);
+    console.log(id, noteTitle, noteStart, noteContent);
 
     if (!noteTitle) {
       alert('Informe o título');
       return;
     }
-    if (!noteDate) {
+    if (!noteStart) {
       alert('Informe o telefone');
       return;
     }
@@ -73,8 +73,8 @@ const UpdateNote = ({ route, navigation }) => {
 
     db.transaction((tx) => {
       tx.executeSql(
-        'UPDATE table_note set note_title=?, note_date=? , note_content=? where note_id=?',
-        [noteTitle, noteDate, noteContent, id],
+        'UPDATE note SET title=?, `start`=? , content=? where id=?',
+        [noteTitle, noteStart, noteContent, id],
         (tx, results) => {
           console.log('Results', results.rowsAffected);
           if (results.rowsAffected > 0) {
@@ -112,10 +112,10 @@ const UpdateNote = ({ route, navigation }) => {
                 }
               />
               <Mytextinput
-                placeholder="Telefone"
-                value={'' + noteDate}
+                placeholder="Data"
+                value={'' + noteStart}
                 onChangeText={
-                  (noteDate) => setNoteDate(noteDate)
+                  (noteStart) => setNoteStart(noteStart)
                 }
                 maxLength={10}
                 style={{ padding: 10 }}
