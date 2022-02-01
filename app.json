@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "react-native-crud-test",
-    "slug": "react-native-crud-test",
+    "name": "react_native_crud_test",
+    "slug": "react_native_crud_test",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -20,7 +20,7 @@
       "supportsTablet": true
     },
     "android": {
-      "package": "com.testcompany.react-native-crud-test",
+      "package": "com.testcompany.react_native_crud_test",
       "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",

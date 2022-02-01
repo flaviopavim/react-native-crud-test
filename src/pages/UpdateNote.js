@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   ScrollView,
   KeyboardAvoidingView,
-  Alert,
   SafeAreaView,
-  Text,
 } from 'react-native';
 
 
@@ -23,9 +21,9 @@ const UpdateNote = ({ route, navigation }) => {
 
   const { id } = route.params;
 
-  let updateAllStates = (title, date, content) => {
+  let updateAllStates = (title, start, content) => {
     setNoteTitle(title);
-    setNoteStart(date);
+    setNoteStart(start);
     setNoteContent(content);
   };
 
@@ -40,9 +38,9 @@ const UpdateNote = ({ route, navigation }) => {
           if (len > 0) {
             let res = results.rows.item(0);
             updateAllStates(
-              res.note_title,
-              res.note_date,
-              res.note_content
+              res.title,
+              res.start,
+              res.content
             );
           } else {
             alert('Agendamento não encontrado!');
@@ -53,7 +51,9 @@ const UpdateNote = ({ route, navigation }) => {
     });
   };
 
-  searchNote();
+  useEffect(() => {
+    searchNote();
+  }, []);
 
   let updateNote = () => {
     console.log(id, noteTitle, noteStart, noteContent);
@@ -98,7 +98,7 @@ const UpdateNote = ({ route, navigation }) => {
                 value={noteTitle}
                 style={{ padding: 10 }}
                 onChangeText={
-                  (noteTitle) => setNoteName(noteTitle)
+                  (noteTitle) => setNoteTitle(noteTitle)
                 }
               />
               <Mytextinput

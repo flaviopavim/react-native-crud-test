@@ -32,20 +32,19 @@ const HomeScreen = ({ navigation }) => {
       );
     });
   }, []);
-
+  db.transaction((tx) => {
+    tx.executeSql(
+      'SELECT * FROM note ORDER BY id DESC',
+      [],
+      (tx, results) => {
+        var temp = [];
+        for (let i = 0; i < results.rows.length; ++i)
+          temp.push(results.rows.item(i));
+        setFlatListItems(temp);
+      }
+    );
+  });
   //useEffect(() => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        'SELECT * FROM note ORDER BY id DESC',
-        [],
-        (tx, results) => {
-          var temp = [];
-          for (let i = 0; i < results.rows.length; ++i)
-            temp.push(results.rows.item(i));
-          setFlatListItems(temp);
-        }
-      );
-    });
   //}, []);
 
   async function deleteNote(id) {
